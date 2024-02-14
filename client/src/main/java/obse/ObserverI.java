@@ -57,6 +57,6 @@ public class ObserverI implements Observer {
         sqlClient.disconnect();
         clientFtp.uploadFile(ipLocal+"-result.csv", System.getProperty("user.dir")+ "/files/result.csv");
         clientFtp.disconnect();
-        serverPrx.addPartialResult(ip+"-result.csv");
+        serverPrx.addPartialResult(ipLocal+"-result.csv");
     }
 }

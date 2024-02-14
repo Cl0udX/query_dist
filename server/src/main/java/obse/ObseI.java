@@ -54,24 +54,26 @@ public class ObseI implements Subject{
             System.out.println("Todos los clientes respondieron");
             combineResults();
             for(ObserverPrx o : observers){
-                o.shutdownObserver();
+                new Thread(() -> {
+                    o.shutdownObserver();
+                }).start();
             }
             observers.clear();
             managerTask.clearAll();
-            System.exit(0);
+            // System.exit(0);
         }
     }
 
     private void combineResults() {
         System.out.println("Combinando resultados");
         ArrayList<Task> tasks = managerTask.getTasksDone();
-        String outputFile = "result.csv";
+        String outputFile = System.getProperty("user.dir")+ "/files/result.csv";
         String result = "";
         try {
             CSVWriter writer = new CSVWriter(new java.io.FileWriter(outputFile));
             boolean first = true;
             for (Task task : tasks){
-                result += task.getInfo() + "-result.csv";
+                result = task.getInfo() + "-result.csv";
                 CSVReader reader = new CSVReader(new java.io.FileReader(System.getProperty("user.dir")+ "/files/"+result));
                 List<String[]> allRows = reader.readAll();
                 if (!first){
@@ -98,7 +100,9 @@ public class ObseI implements Subject{
             for(ObserverPrx o : observers){
                 if (verifyObserver(o)){
                     String ip = extractIPAddress(o.toString());
-                    o.update(command, ip+'-'+message);
+                    new Thread(() -> {
+                        o.update(command, ip+'-'+message);
+                    }).start();
                 }
             }
         }
