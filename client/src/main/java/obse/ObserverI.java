@@ -56,7 +56,7 @@ public class ObserverI implements Observer {
     }
 
     private void startProcess(String nameFile) {
-        String ip = extractIPAddresses(serverPrx.ice_getConnection().toString())[0];
+        String ip = extractIPAddresses(serverPrx.ice_getConnection().toString())[1];
         System.out.println("Se ejecuto la consulta para el archivo: "+ nameFile);
         System.out.println("Server ip: "+ip);
         System.out.println("Client ip: "+ipLocal);

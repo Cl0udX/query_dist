@@ -94,13 +94,13 @@ public class ObseI implements Subject{
         if (command.equals("run")){
             for(ObserverPrx o : observers){
                 if (verifyObserver(o)){
-                    Task task = new Task(extractIPAddresses(o.ice_getConnection().toString())[0]);
+                    Task task = new Task(extractIPAddresses(o.ice_getConnection().toString())[1]);
                     managerTask.addTask(task);
                 }
             }
             for(ObserverPrx o : observers){
                 if (verifyObserver(o)){
-                    String ip = extractIPAddresses(o.ice_getConnection().toString())[0];
+                    String ip = extractIPAddresses(o.ice_getConnection().toString())[1];
                     new Thread(() -> {
                         o.update(command, ip+'-'+message);
                     }).start();
