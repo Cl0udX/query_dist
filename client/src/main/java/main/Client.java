@@ -1,5 +1,4 @@
 package main;
-import java.io.FileInputStream;
 import java.util.Properties;
 
 import com.zeroc.Ice.Communicator;
@@ -42,10 +41,8 @@ public class Client {
                 System.out.println("Ambiente: " + environment);
             }      
         }
-
-        String enviroment = System.getProperty("enviroment");
-        properties.load(new FileInputStream(enviroment+".properties.cfg"));
-        try(Communicator communicator = Util.initialize(args, (enviroment+".properties.cfg"))){
+        properties.load(Client.class.getResourceAsStream("/"+environment+"-properties.cfg"));
+        try(Communicator communicator = Util.initialize(args, (environment+"-properties.cfg"))){
             ObjectPrx baseSubject;
             if (host != null) {
                baseSubject = communicator.stringToProxy("subject:default -h " + host + " -p 25567");
