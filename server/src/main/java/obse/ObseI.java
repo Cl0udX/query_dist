@@ -97,7 +97,8 @@ public class ObseI implements Subject{
             }
             for(ObserverPrx o : observers){
                 if (verifyObserver(o)){
-                    o.update(command, message);
+                    String ip = extractIPAddress(o.toString());
+                    o.update(command, ip+'-'+message);
                 }
             }
         }

@@ -12,6 +12,7 @@ import managerFtp.FTPClien;
 public class ObserverI implements Observer {
 
     private SubjectPrx serverPrx;
+    private String ipLocal;
 
     public ObserverI(SubjectPrx serverPrx) {
         this.serverPrx = serverPrx;
@@ -20,7 +21,11 @@ public class ObserverI implements Observer {
     @Override
     public void update(String command,String msg, Current current){
         if (command.equals("run")){
-            startProcess(msg);
+            String concat[] = msg.split("-");
+            if (concat.length == 2){
+                ipLocal = concat[0];
+                startProcess(concat[1]);
+            }
         }
     }
 
@@ -44,12 +49,13 @@ public class ObserverI implements Observer {
         String ip = extractIPAddress(serverPrx.toString());
         System.out.println("Se ejecuto la consulta para el archivo: "+ nameFile);
         System.out.println("Server ip: "+ip);
+        System.out.println("Client ip: "+ipLocal);
         FTPClien clientFtp = new FTPClien(ip, "query_ftp", "query_ftp");
         clientFtp.downloadFile(nameFile, System.getProperty("user.dir")+ "/files/"+nameFile);
         SqlClient sqlClient = new SqlClient();
         sqlClient.executeQuery(System.getProperty("user.dir")+ "/files/"+nameFile);
         sqlClient.disconnect();
-        clientFtp.uploadFile(ip+"-result.csv", System.getProperty("user.dir")+ "/files/result.csv");
+        clientFtp.uploadFile(ipLocal+"-result.csv", System.getProperty("user.dir")+ "/files/result.csv");
         clientFtp.disconnect();
         serverPrx.addPartialResult(ip+"-result.csv");
     }
