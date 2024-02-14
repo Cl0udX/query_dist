@@ -14,7 +14,7 @@ import com.opencsv.CSVWriter;
 
 public class SqlClient {
 
-    private static final String URL = "jdbc:postgresql://xhgrid1/nepsAux";
+    private static final String URL = "jdbc:postgresql://localhost/nepsAux";
     private static final String USER = "postgres";
     private static final String PASSWORD = "postgres";
     private Connection con;
