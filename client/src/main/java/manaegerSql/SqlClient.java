@@ -12,11 +12,13 @@ import java.sql.Statement;
 
 import com.opencsv.CSVWriter;
 
+import main.Client;
+
 public class SqlClient {
 
-    private static final String URL = "jdbc:postgresql://localhost/nepsAux";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "postgres";
+    private static final String URL = Client.properties.getProperty("DbUrl");
+    private static final String USER = Client.properties.getProperty("DbUser");
+    private static final String PASSWORD = Client.properties.getProperty("DbPassword");
     private Connection con;
 
     public SqlClient() {

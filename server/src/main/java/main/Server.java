@@ -1,3 +1,4 @@
+package main;
 import java.util.Scanner;
 
 import com.zeroc.Ice.Communicator;
