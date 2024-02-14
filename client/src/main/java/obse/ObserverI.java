@@ -38,24 +38,25 @@ public class ObserverI implements Observer {
 
     /**
      * Extrae las direcciones IP de una cadena que contiene información de conexión Ice.
-     * La cadena debe tener el formato "local address = IP:puerto\nremote address = IP:puerto".
+     * La cadena puede tener el formato "local address = IP:puerto\nremote address = IP:puerto"
+     * o "remote address = IP:puerto\nlocal address = IP:puerto".
      *
      * @param input La cadena que contiene la información de conexión Ice.
      * @return Un arreglo de strings que contiene las direcciones IP local y remota, respectivamente en un arreglo.
-     */
-    public String[] extractIPAddress(String input){
+    */
+    public static String[] extractIPAddresses(String input) {
         String[] ips = new String[2];
-        Pattern pattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}):\\d+");
+        Pattern pattern = Pattern.compile("(local address|remote address) = (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}):\\d+");
         Matcher matcher = pattern.matcher(input);
         int index = 0;
         while (matcher.find() && index < 2) {
-            ips[index++] = matcher.group(1);
+            ips[index++] = matcher.group(2);
         }
         return ips;
     }
 
     private void startProcess(String nameFile) {
-        String ip = extractIPAddress(serverPrx.ice_getConnection().toString())[0];
+        String ip = extractIPAddresses(serverPrx.ice_getConnection().toString())[0];
         System.out.println("Se ejecuto la consulta para el archivo: "+ nameFile);
         System.out.println("Server ip: "+ip);
         System.out.println("Client ip: "+ipLocal);
