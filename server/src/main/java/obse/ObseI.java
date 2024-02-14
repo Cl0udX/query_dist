@@ -93,6 +93,10 @@ public class ObseI implements Subject{
                 if (verifyObserver(o)){
                     Task task = new Task(extractIPAddress(o.toString()));
                     managerTask.addTask(task);
+                }
+            }
+            for(ObserverPrx o : observers){
+                if (verifyObserver(o)){
                     o.update(command, message);
                 }
             }
