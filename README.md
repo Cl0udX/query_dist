@@ -1,22 +1,32 @@
-# Query_dist usando el patron de diseño Publisher and Suscribe / ZeroC
-## query_dist un proyecto cliente-servidor en Java que usa ZeroC como midelware y Gradle para la compilacion.
+# Query_dist usando el patrón de diseño Publisher and Suscribe / ZeroC
 
-Importante: Este proyecto presenta posibilidades de mejora en cuanto al manejo de las ecepcciones, los fines de este proyecto es presentar una especie de base/guia para los nuevos usuarios de ZeroC 3.7.4 usando Java 11.
+## Descripción
+Query_dist es un proyecto cliente-servidor en Java que utiliza ZeroC como middleware y Gradle para la compilación.
 
-Problema: Se tiene una base de datos muy grande que presenta problemas de memoria a la hora de hacer alguna consulta.
-Solucion: Dividir dicha base de datos en n cantidades para distribuir la carga de las consultas, para esto configurariamos n+1 nodos. Donde n son los clientes que se encargan de las consultas y el restante es el servidor que maneraja los clientes y los datos finales de las consultas.
-------------------------------------------
-Requisitos:
-Java 11
-Gradle 8.6
-ZeroC 3.7.4
-Finalmente los n+1 nodos
-Compilacion:
-Desde la raiz del proyecto usar el comando, -gradlew shadowjar- se generaran dos jar uno en client/build/libs/mi-aplicacion.jar y server/build/libs/mi-aplicacion.jar.
-Este metodo de compilacion empaqueta todas las dependecias al compilar, esto con el fin de que los .jar puedan ser ejecutados en cualquier equipo.
+### Importante:
+Este proyecto presenta posibilidades de mejora en cuanto al manejo de las excepciones. El propósito de este proyecto es presentar una especie de base/guía para los nuevos usuarios de ZeroC 3.7.4 usando Java 11.
 
-Ejecucion Server:
-En en directorio donde se encuente el .jar del servidor es importante que el .sql que se quiera distribuir se encuente en la ruta ./files/test.sql de tal manera que presente esta estructura.
+### Problema:
+Se tiene una base de datos muy grande que presenta problemas de memoria a la hora de hacer alguna consulta.
+
+### Solución:
+Dividir dicha base de datos en n cantidades para distribuir la carga de las consultas. Para esto configuraremos n+1 nodos, donde n son los clientes que se encargan de las consultas y el restante es el servidor que maneja los clientes y los datos finales de las consultas.
+#------------------------------------------------------------------------------------------
+## Requisitos:
+- Java 11
+- Gradle 8.6
+- ZeroC 3.7.4
+- Finalmente, los n+1 nodos
+
+## Compilación:
+Desde la raíz del proyecto, usar el comando `./gradlew shadowjar`. Se generarán dos JAR, uno en `client/build/libs/mi-aplicacion.jar` y otro en `server/build/libs/mi-aplicacion.jar`.
+
+Este método de compilación empaqueta todas las dependencias al compilar, con el fin de que los JAR puedan ser ejecutados en cualquier equipo.
+
+## Ejecución del Servidor:
+En el directorio donde se encuentre el JAR del servidor, es importante que el archivo `.sql` que se quiera distribuir se encuentre en la ruta `./files/test.sql`. La estructura debe ser la siguiente:
+
+
 
 mi-directorio/
 ├── mi-aplicacion.jar
