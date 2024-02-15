@@ -1,10 +1,10 @@
-# Query_dist usando el patrón de diseño Publisher and Suscribe / ZeroC
+# Query_dist usando el patrón de diseño Publisher and Suscribe / ZeroC-ICE
 
 ## Descripción
-Query_dist es un proyecto cliente-servidor en Java que utiliza ZeroC como middleware y Gradle para la compilación.
+Query_dist es un proyecto cliente-servidor en Java que utiliza ZeroC-ICE como middleware y Gradle para la compilación.
 
 ### Importante:
-Este proyecto presenta posibilidades de mejora en cuanto al manejo de las excepciones. El propósito de este proyecto es presentar una especie de base/guía para los nuevos usuarios de ZeroC 3.7.4 usando Java 11.
+Este proyecto presenta posibilidades de mejora en cuanto al manejo de las excepciones. El propósito de este proyecto es presentar una especie de base/guía para los nuevos usuarios de ZeroC-ICE 3.7.4 usando Java 11.
 
 ### Problema:
 Se tiene una base de datos muy grande que presenta problemas de memoria a la hora de hacer alguna consulta.
@@ -15,7 +15,7 @@ Dividir dicha base de datos en n cantidades para distribuir la carga de las cons
 ## Requisitos:
 - Java 11
 - Gradle 8.6
-- ZeroC 3.7.4
+- ZeroC-ICE 3.7.4
 - Finalmente, los n+1 nodos
 
 ## Compilación:
