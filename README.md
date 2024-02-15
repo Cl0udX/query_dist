@@ -28,9 +28,12 @@ En el directorio donde se encuentre el JAR del servidor, es importante que el ar
 
 
 mi-directorio/
-|-- mi-aplicacion.jar
-`-- files/
-    `-- test.sql
+
+├── mi-aplicacion.jar
+
+└── files/
+
+    └── test.sql
 
 Finalmente, ejecutamos `java -jar mi-aplicacion.jar`.
 
