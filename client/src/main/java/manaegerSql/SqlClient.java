@@ -12,11 +12,13 @@ import java.sql.Statement;
 
 import com.opencsv.CSVWriter;
 
+import main.Client;
+
 public class SqlClient {
 
-    private static final String URL = "jdbc:postgresql://xhgrid1/nepsAux";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "postgres";
+    private static final String URL = Client.properties.getProperty("DbUrl");
+    private static final String USER = Client.properties.getProperty("DbUser");
+    private static final String PASSWORD = Client.properties.getProperty("DbPassword");
     private Connection con;
 
     public SqlClient() {
@@ -39,6 +41,7 @@ public class SqlClient {
 
         try {
             Statement stmt = con.createStatement();
+            System.out.println("Ejecutando consulta...");
             ResultSet rs = stmt.executeQuery(query);
             CSVWriter writer = new CSVWriter(new FileWriter("files/result.csv"));
 
@@ -60,7 +63,7 @@ public class SqlClient {
                 }
                 writer.writeNext(row);
             }
-            System.out.println("Consulta ejecutada correctamente");
+            System.out.println("Consulta ejecutada, guardando resultados");
             writer.close();
         } catch (Exception e) {
             throw new RuntimeException("Error al ejecutar la consulta o escribir el CSV", e);

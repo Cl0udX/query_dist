@@ -1,17 +1,19 @@
 package obse;
 
-import FunctionsPoint.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.zeroc.Ice.Current;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.ftpserver.command.impl.listing.ListArgument;
-
-import managerTask.*;
+import FunctionsPoint.ObserverPrx;
+import FunctionsPoint.Subject;
+import main.Server;
+import managerTask.ManagerTask;
+import managerTask.Task;
 
 public class ObseI implements Subject{
 
@@ -52,26 +54,35 @@ public class ObseI implements Subject{
         managerTask.addTaskDone(new Task(ip));
         if (managerTask.getTasks().size() == managerTask.getTasksDone().size()){
             System.out.println("Todos los clientes respondieron");
-            combineResults();
+            Server.ftpServer.stop();
             for(ObserverPrx o : observers){
-                o.shutdownObserver();
+                new Thread(() -> {
+                    o.shutdownObserver();
+                }).start();
             }
-            observers.clear();
-            managerTask.clearAll();
-            System.exit(0);
+            ArrayList<Task> tasksDone = new ArrayList<Task>(managerTask.getTasksDone());
+            new Thread(() -> {
+                observers.clear();
+                managerTask.clearAll();
+            }).start();
+            new Thread(() -> {
+                combineResults(tasksDone);
+                Server.mainCommunicator.shutdown();
+                System.out.println("El servidor cerro las conexiones y se detuvo correctamente.");
+            }).start();
         }
     }
 
-    private void combineResults() {
+    private void combineResults(ArrayList<Task> tasksDone) {
         System.out.println("Combinando resultados");
-        ArrayList<Task> tasks = managerTask.getTasksDone();
-        String outputFile = "result.csv";
+        ArrayList<Task> tasks = tasksDone;
+        String outputFile = System.getProperty("user.dir")+ "/files/result.csv";
         String result = "";
         try {
             CSVWriter writer = new CSVWriter(new java.io.FileWriter(outputFile));
             boolean first = true;
             for (Task task : tasks){
-                result += task.getInfo() + "-result.csv";
+                result = task.getInfo() + "-result.csv";
                 CSVReader reader = new CSVReader(new java.io.FileReader(System.getProperty("user.dir")+ "/files/"+result));
                 List<String[]> allRows = reader.readAll();
                 if (!first){
@@ -79,6 +90,7 @@ public class ObseI implements Subject{
                     first = false;
                 }
                 writer.writeAll(allRows);
+                reader.close();
             }
             writer.close();
             System.out.println("Resultados combinados");
@@ -91,9 +103,16 @@ public class ObseI implements Subject{
         if (command.equals("run")){
             for(ObserverPrx o : observers){
                 if (verifyObserver(o)){
-                    Task task = new Task(extractIPAddress(o.toString()));
+                    Task task = new Task(extractIPAddresses(o.ice_getConnection().toString())[1]);
                     managerTask.addTask(task);
-                    o.update(command, message);
+                }
+            }
+            for(ObserverPrx o : observers){
+                if (verifyObserver(o)){
+                    String ip = extractIPAddresses(o.ice_getConnection().toString())[1];
+                    new Thread(() -> {
+                        o.update(command, ip+'-'+message);
+                    }).start();
                 }
             }
         }
@@ -109,12 +128,22 @@ public class ObseI implements Subject{
         }
     }
 
-    public String extractIPAddress(String input){
-         Pattern pattern = Pattern.compile("-h\\s+(\\S+)");
-         Matcher matcher = pattern.matcher(input);
-         if (matcher.find()) {
-             return matcher.group(1);
-         }
-         return null;
+    /**
+     * Extrae las direcciones IP de una cadena que contiene información de conexión Ice.
+     * La cadena puede tener el formato "local address = IP:puerto\nremote address = IP:puerto"
+     * o "remote address = IP:puerto\nlocal address = IP:puerto".
+     *
+     * @param input La cadena que contiene la información de conexión Ice.
+     * @return Un arreglo de strings que contiene las direcciones IP local y remota, respectivamente en un arreglo.
+    */
+    public static String[] extractIPAddresses(String input) {
+        String[] ips = new String[2];
+        Pattern pattern = Pattern.compile("(local address|remote address) = (\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}):\\d+");
+        Matcher matcher = pattern.matcher(input);
+        int index = 0;
+        while (matcher.find() && index < 2) {
+            ips[index++] = matcher.group(2);
+        }
+        return ips;
     }
 }
