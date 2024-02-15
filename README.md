@@ -27,13 +27,12 @@ Este método de compilación empaqueta todas las dependencias al compilar, con e
 En el directorio donde se encuentre el JAR del servidor, es importante que el archivo `.sql` que se quiera distribuir se encuentre en la ruta `./files/test.sql`. La estructura debe ser la siguiente:
 
 
-`mi-directorio/
-
+```plaintext
+mi-directorio/
 ├── mi-aplicacion.jar
-
 └── files/
-
-    └── test.sql`
+    └── test.sql
+```
 
 Finalmente, ejecutamos `java -jar mi-aplicacion.jar`.
 
