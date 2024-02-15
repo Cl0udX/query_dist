@@ -1,4 +1,5 @@
 package obse;
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -6,6 +7,7 @@ import com.zeroc.Ice.Current;
 
 import FunctionsPoint.Observer;
 import FunctionsPoint.SubjectPrx;
+import main.Client;
 import manaegerSql.SqlClient;
 import managerFtp.FTPClien;
 
@@ -32,6 +34,7 @@ public class ObserverI implements Observer {
     @Override
     public void shutdownObserver(Current current){
         System.out.println("Se desconecto el cliente del servidor");
+        Client.mainCommunicator.shutdown();
         System.exit(0);
     }
 
@@ -56,6 +59,7 @@ public class ObserverI implements Observer {
     }
 
     private void startProcess(String nameFile) {
+        verifyAndCreateFolderResult();
         String ip = extractIPAddresses(serverPrx.ice_getConnection().toString())[1];
         System.out.println("Se ejecuto la consulta para el archivo: "+ nameFile);
         System.out.println("Server ip: "+ip);
@@ -68,5 +72,16 @@ public class ObserverI implements Observer {
         clientFtp.uploadFile(ipLocal+"-result.csv", System.getProperty("user.dir")+ "/files/result.csv");
         clientFtp.disconnect();
         serverPrx.addPartialResult(ipLocal+"-result.csv");
+    }
+
+    private void verifyAndCreateFolderResult() {
+        try {
+            File file = new File(System.getProperty("user.dir")+"/files");
+            if (!file.exists()) {
+                file.mkdir();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -11,6 +11,7 @@ import com.zeroc.Ice.Current;
 
 import FunctionsPoint.ObserverPrx;
 import FunctionsPoint.Subject;
+import main.Server;
 import managerTask.ManagerTask;
 import managerTask.Task;
 
@@ -53,21 +54,28 @@ public class ObseI implements Subject{
         managerTask.addTaskDone(new Task(ip));
         if (managerTask.getTasks().size() == managerTask.getTasksDone().size()){
             System.out.println("Todos los clientes respondieron");
-            combineResults();
+            Server.ftpServer.stop();
             for(ObserverPrx o : observers){
                 new Thread(() -> {
                     o.shutdownObserver();
                 }).start();
             }
-            observers.clear();
-            managerTask.clearAll();
-            // System.exit(0);
+            ArrayList<Task> tasksDone = new ArrayList<Task>(managerTask.getTasksDone());
+            new Thread(() -> {
+                observers.clear();
+                managerTask.clearAll();
+            }).start();
+            new Thread(() -> {
+                combineResults(tasksDone);
+                Server.mainCommunicator.shutdown();
+                System.out.println("El servidor cerro las conexiones y se detuvo correctamente.");
+            }).start();
         }
     }
 
-    private void combineResults() {
+    private void combineResults(ArrayList<Task> tasksDone) {
         System.out.println("Combinando resultados");
-        ArrayList<Task> tasks = managerTask.getTasksDone();
+        ArrayList<Task> tasks = tasksDone;
         String outputFile = System.getProperty("user.dir")+ "/files/result.csv";
         String result = "";
         try {
@@ -82,6 +90,7 @@ public class ObseI implements Subject{
                     first = false;
                 }
                 writer.writeAll(allRows);
+                reader.close();
             }
             writer.close();
             System.out.println("Resultados combinados");

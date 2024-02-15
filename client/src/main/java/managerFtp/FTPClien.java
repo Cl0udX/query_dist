@@ -32,6 +32,7 @@ public class FTPClien {
             if (!localFile.exists()) {
                 System.out.println("El archivo no existe.");
             }else{
+                System.out.println("Subiendo archivo...");
                 InputStream inputStream = new FileInputStream(localFilePath);
                 boolean done = client.storeFile(remoteFilePath, inputStream);
                 if (done) {
@@ -50,17 +51,20 @@ public class FTPClien {
             File localFile = new File(localFilePath);
             if (!localFile.exists()) {
                 localFile.createNewFile();
-                OutputStream outputStream = new FileOutputStream(localFilePath);
-                boolean success = client.retrieveFile(remoteFilePath, outputStream);
-                if (success) {
-                    System.out.println("El archivo se descargó correctamente.");
-                } else {
-                    System.out.println("No se pudo descargar el archivo.");
-                }
-                outputStream.close();
+                
             }else{
-                System.out.println("El archivo ya existe.");
+                System.out.println("El archivo ya existe, se sobreescribirá.");
+                localFile.delete();
+                localFile.createNewFile();
             }
+            OutputStream outputStream = new FileOutputStream(localFilePath);
+            boolean success = client.retrieveFile(remoteFilePath, outputStream);
+            if (success) {
+                System.out.println("El archivo se descargó correctamente.");
+            } else {
+                System.out.println("No se pudo descargar el archivo.");
+            }
+            outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

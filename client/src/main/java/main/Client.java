@@ -12,7 +12,8 @@ import obse.ObserverI;
 
 public class Client {
 
-    public static final Properties properties = new Properties();  
+    public static final Properties properties = new Properties();
+    public static Communicator mainCommunicator = null;
 
     public static void main(String[] args) throws Exception {
         String host = null;
@@ -43,6 +44,7 @@ public class Client {
         }
         properties.load(Client.class.getResourceAsStream("/"+environment+"-properties.cfg"));
         try(Communicator communicator = Util.initialize(args, (environment+"-properties.cfg"))){
+            mainCommunicator = communicator;
             ObjectPrx baseSubject;
             if (host != null) {
                baseSubject = communicator.stringToProxy("subject:default -h " + host + " -p 25567");

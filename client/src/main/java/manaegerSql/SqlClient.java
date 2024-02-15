@@ -41,6 +41,7 @@ public class SqlClient {
 
         try {
             Statement stmt = con.createStatement();
+            System.out.println("Ejecutando consulta...");
             ResultSet rs = stmt.executeQuery(query);
             CSVWriter writer = new CSVWriter(new FileWriter("files/result.csv"));
 
@@ -62,7 +63,7 @@ public class SqlClient {
                 }
                 writer.writeNext(row);
             }
-            System.out.println("Consulta ejecutada correctamente");
+            System.out.println("Consulta ejecutada, guardando resultados");
             writer.close();
         } catch (Exception e) {
             throw new RuntimeException("Error al ejecutar la consulta o escribir el CSV", e);

@@ -56,4 +56,8 @@ public class FTPServer {
         }
     }
 
+    public void stop(){
+        server.stop();
+    }
+
 }
