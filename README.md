@@ -46,13 +46,15 @@ Por ejemplo, si ejecutas el servidor desde la carpeta raíz del proyecto, sería
 
 Y la carpeta `files` debe estar en la carpeta raíz del proyecto, es decir, donde estás parado desde la terminal:
 
-`query_dist/
+```plaintext
+query_dist/
 ├── files/
 |   └── test.sql
 └── server/
     └── build/
         └── libs/
             └── mi-aplicacion.jar`
+```
 
 ## Ejecución en los Clientes:
 `java -jar mi-aplicacion -h <ip-server> -d prod`
