@@ -73,3 +73,5 @@ Cuando ya los clientes deseados estén conectados al servidor, solo queda usar e
 ### Importante:
 Verificar que se pueda hacer ping a los clientes para garantizar su funcionamiento.
 
+## Tutorial
+[Tutorial de uso de ZeroC-ICE en JAVA](https://github.com/Cl0udX/query_dist/blob/master/Tutorial%20de%20uso%20de%20ZeroC-ICE.pdf)
